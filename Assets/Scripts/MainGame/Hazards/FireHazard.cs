@@ -11,30 +11,22 @@ public class FireHazard : MonoBehaviour
     
     [HideInInspector] public FireHazardScriptableObject fireHazardData;
 
-    [SerializeField]
-    private UnityEvent<FireEnteredEventArgs> onCharacterEntered = new UnityEvent<FireEnteredEventArgs>();
-
-    // public void SetScriptableData(FireHazardScriptableObject fireHazardScriptableObject)
-    // {
-    //     fireHazardData = fireHazardScriptableObject;
-    // }
-    // private void Start()
-    // { 
-    //     if(onCharacterEnteredAction != null)
-    //        onCharacterEntered.AddListener(onCharacterEnteredAction);
-    // }
+    [SerializeField] private PlayerCharacterController playerScrRef;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("PlayerCharacter"))
+        if (other.transform.root == playerScrRef.transform)
         {
+
+#if UNITY_EDITOR
             Debug.Log("Player entered this hazard");
+#endif
+
             FireEnteredEventArgs fireEnteredEventArgs = new FireEnteredEventArgs
             {
                 damageDealt = fireHazardData.GetRandomFireDamage(),
-                targetCharacterController = other.GetComponent<PlayerCharacterController>()
+                targetCharacterController = playerScrRef
             };
-            onCharacterEntered?.Invoke(fireEnteredEventArgs);
             onCharacterEnteredAction.Invoke(fireEnteredEventArgs);
         }
     }
