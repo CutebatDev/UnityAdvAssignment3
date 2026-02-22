@@ -27,8 +27,8 @@ public class SaveGameManager : MonoBehaviour
         serializedSaveGame.playerRotationY = gameManager.playerCharacterController.transform.eulerAngles.y;
         serializedSaveGame.playerRotationZ = gameManager.playerCharacterController.transform.eulerAngles.z;
         
-        serializedSaveGame.playerHPNew = gameManager.playerCharacterController.Hp;
-        serializedSaveGame.currentWaypointIndex = gameManager.playerCharacterController.CurrentWaypointIndex;
+        serializedSaveGame.playerHPNew = gameManager.playerCharacterController.hp;
+        serializedSaveGame.currentWaypointIndex = gameManager.playerCharacterController.currentWaypointIndex;
         
           //  SaveToJson();
          SaveToBinary();
@@ -47,12 +47,12 @@ public class SaveGameManager : MonoBehaviour
              serializedSaveGame.playerPositionY, serializedSaveGame.playerPositionZ);
          gameManager.playerCharacterController.transform.eulerAngles = new Vector3(serializedSaveGame.playerRotationX,
              serializedSaveGame.playerRotationY, serializedSaveGame.playerRotationZ);
-         gameManager.playerCharacterController.Hp = serializedSaveGame.playerHPNew;
+         gameManager.playerCharacterController.hp = serializedSaveGame.playerHPNew;
         
-         gameManager.playerCharacterController.CurrentWaypointIndex = serializedSaveGame.currentWaypointIndex;
+         gameManager.playerCharacterController.currentWaypointIndex = serializedSaveGame.currentWaypointIndex;
          //
-         uiManager.RefreshHPText(gameManager.playerCharacterController.Hp);
-         gameManager.playerCharacterController.SetDestination(gameManager.playerCharacterController.CurrentWaypointIndex);
+         uiManager.RefreshHPText(gameManager.playerCharacterController.hp);
+         gameManager.playerCharacterController.SetDestination(gameManager.playerCharacterController.currentWaypointIndex);
     }
 
     private void SaveToJson()

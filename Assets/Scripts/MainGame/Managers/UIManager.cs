@@ -23,7 +23,7 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        hpText.text = bobby.Hp.ToString();
+        hpText.text = bobby.hp.ToString();
     }
 
     private void Update()
