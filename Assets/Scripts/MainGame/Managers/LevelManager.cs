@@ -25,7 +25,11 @@ public class LevelManager : MonoBehaviour
 
     private void AsyncOperationOnCompleted(AsyncOperationHandle<GameObject> obj)
     {
-       Debug.Log("Instntiate");
+
+#if UNITY_EDITOR
+        Debug.Log("Instntiate");
+#endif
+
     }
 
     public void LoadSector()
@@ -36,7 +40,11 @@ public class LevelManager : MonoBehaviour
 
     private void LoadAsyncComplete(AsyncOperationHandle<GameObject> asyncOperationHandle)
     {
-       Debug.Log("Loading complete!");
-       loadedSector = asyncOperationHandle.Result;
+
+#if UNITY_EDITOR
+        Debug.Log("Loading complete!");
+#endif
+
+        loadedSector = asyncOperationHandle.Result;
     }
 }

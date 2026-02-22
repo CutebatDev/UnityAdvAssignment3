@@ -8,85 +8,65 @@ using UnityEngine;
 public class SaveGameManager : MonoBehaviour
 {
     private const string SAVE_FILE_NAME = "/Save.dat";
+    private string path = Application.persistentDataPath + SAVE_FILE_NAME;
+
     [SerializeField] private GameManager gameManager;
     [SerializeField] private UIManager uiManager;
-
-    private SerializedSaveGame serializedSaveGame;
 
     [ContextMenu("Save!")]
     public void SaveGame()
     {
-        serializedSaveGame = new SerializedSaveGame();
-        // serializedSaveGame.playerPosition = gameManager.playerCharacterController.transform.position;
-        // serializedSaveGame.playerRotation = gameManager.playerCharacterController.transform.eulerAngles;
-        serializedSaveGame.playerPositionX = gameManager.playerCharacterController.transform.position.x;
-        serializedSaveGame.playerPositionY = gameManager.playerCharacterController.transform.position.y;
-        serializedSaveGame.playerPositionZ = gameManager.playerCharacterController.transform.position.z;
-        
-        serializedSaveGame.playerRotationX = gameManager.playerCharacterController.transform.eulerAngles.x;
-        serializedSaveGame.playerRotationY = gameManager.playerCharacterController.transform.eulerAngles.y;
-        serializedSaveGame.playerRotationZ = gameManager.playerCharacterController.transform.eulerAngles.z;
-        
-        serializedSaveGame.playerHPNew = gameManager.playerCharacterController.hp;
-        serializedSaveGame.currentWaypointIndex = gameManager.playerCharacterController.currentWaypointIndex;
-        
-          //  SaveToJson();
-         SaveToBinary();
+
+        using (FileStream fs = new FileStream(path, FileMode.Create))
+        using (BinaryWriter writer = new BinaryWriter(fs))
+        {
+            // Position
+            writer.Write(gameManager.playerCharacterController.transform.position.x);
+            writer.Write(gameManager.playerCharacterController.transform.position.y);
+            writer.Write(gameManager.playerCharacterController.transform.position.z);
+
+            // Rotation
+            writer.Write(gameManager.playerCharacterController.transform.eulerAngles.x);
+            writer.Write(gameManager.playerCharacterController.transform.eulerAngles.y);
+            writer.Write(gameManager.playerCharacterController.transform.eulerAngles.z);
+
+            // Stats
+            writer.Write(gameManager.playerCharacterController.hp);
+            writer.Write(gameManager.playerCharacterController.currentWaypointIndex);
+        }
     }
 
     [ContextMenu("Load!")]
     public void LoadGame()
     {
-       // LoadFromJson();
-
-         LoadFromBinary();
-        
-         // gameManager.playerCharacterController.transform.position = serializedSaveGame.playerPosition;
-         // gameManager.playerCharacterController.transform.eulerAngles = serializedSaveGame.playerRotation;
-         gameManager.playerCharacterController.transform.position = new Vector3(serializedSaveGame.playerPositionX,
-             serializedSaveGame.playerPositionY, serializedSaveGame.playerPositionZ);
-         gameManager.playerCharacterController.transform.eulerAngles = new Vector3(serializedSaveGame.playerRotationX,
-             serializedSaveGame.playerRotationY, serializedSaveGame.playerRotationZ);
-         gameManager.playerCharacterController.hp = serializedSaveGame.playerHPNew;
-        
-         gameManager.playerCharacterController.currentWaypointIndex = serializedSaveGame.currentWaypointIndex;
-         //
-         uiManager.RefreshHPText(gameManager.playerCharacterController.hp);
-         gameManager.playerCharacterController.SetDestination(gameManager.playerCharacterController.currentWaypointIndex);
-    }
-
-    private void SaveToJson()
-    {
-        string jsonString = JsonUtility.ToJson(serializedSaveGame, true);
-
-        File.WriteAllText(Application.persistentDataPath + SAVE_FILE_NAME, jsonString);
-    }
-
-    private void LoadFromJson()
-    {
-        string jsonString = File.ReadAllText(Application.persistentDataPath + SAVE_FILE_NAME);
-        serializedSaveGame = JsonUtility.FromJson<SerializedSaveGame>(jsonString);
-    }
-
-    private void SaveToBinary()
-    {
-        FileStream fileStream = new FileStream(Application.persistentDataPath
-                                               + SAVE_FILE_NAME, FileMode.Create);
-        BinaryFormatter converter = new BinaryFormatter();
-        converter.Serialize(fileStream, serializedSaveGame);
-        fileStream.Close();
-    }
-
-    private void LoadFromBinary()
-    {
-        if (File.Exists(Application.persistentDataPath + SAVE_FILE_NAME))
+        if (!File.Exists(path))
         {
-            FileStream fileStream = new FileStream(Application.persistentDataPath + SAVE_FILE_NAME, FileMode.Open);
+            Debug.LogWarning("No save file found!");
+            return;
+        }
 
-            BinaryFormatter converter = new BinaryFormatter();
-            serializedSaveGame = converter.Deserialize(fileStream) as SerializedSaveGame;
+        using (FileStream fs = new FileStream(path, FileMode.Open))
+        using (BinaryReader reader = new BinaryReader(fs))
+        {
+            // Position
+            float posX = reader.ReadSingle();
+            float posY = reader.ReadSingle();
+            float posZ = reader.ReadSingle();
+            gameManager.playerCharacterController.transform.position = new Vector3(posX, posY, posZ);
 
-            fileStream.Close();
+            // Rotation
+            float rotX = reader.ReadSingle();
+            float rotY = reader.ReadSingle();
+            float rotZ = reader.ReadSingle();
+            gameManager.playerCharacterController.transform.eulerAngles= new Vector3(rotX, rotY, rotZ);
+
+            // Stats
+            gameManager.playerCharacterController.hp = reader.ReadInt32();
+            gameManager.playerCharacterController.currentWaypointIndex = reader.ReadInt32();
+
+            // Update HP+Destionation
+            uiManager.RefreshHPText(gameManager.playerCharacterController.hp);
+            gameManager.playerCharacterController.SetDestination(gameManager.playerCharacterController.currentWaypointIndex);
         }
     }
 }
