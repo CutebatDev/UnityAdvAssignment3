@@ -7,34 +7,21 @@ using UnityEngine;
 public class UIManager : MonoBehaviour
 {
     public TextMeshProUGUI hpText;
+    private int lastHP;
     
-    [SerializeField] private PlayerCharacterController bobby;
-    [SerializeField] private GameObject skillsHolder;
-    
+    [SerializeField] private PlayerCharacterController goofyGoober;
+
     public void RefreshHPText(int newHP)
     {
+        if (lastHP == newHP)
+            return;
+
         hpText.text = newHP.ToString();
+        lastHP = newHP;
     }
 
     private void Awake()
     {
-        bobby.onTakeDamageEventAction += RefreshHPText;
-    }
-
-    private void Start()
-    {
-        hpText.text = bobby.hp.ToString();
-    }
-
-    private void Update()
-    {
-        skillsHolder = GameObject.Find("Skills Group");
-        GameObject[] skillsButtonUI = skillsHolder.GetComponentsInChildren<GameObject>();
-        
-        for (int i = 0; i < skillsButtonUI.Length; i++)
-        {
-            skillsButtonUI[i].GetComponent<SkillButtonUI>().skillIcon.sprite =  skillsButtonUI[i].GetComponent<SkillButtonUI>().skillIcons[i];
-            skillsButtonUI[i].GetComponent<SkillButtonUI>().skillNameText.text = "Skill " + (i + 1);
-        }
+        goofyGoober.onTakeDamageEventAction += RefreshHPText;
     }
 }

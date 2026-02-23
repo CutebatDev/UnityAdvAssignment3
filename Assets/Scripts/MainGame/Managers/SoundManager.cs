@@ -5,22 +5,33 @@ using UnityEngine.Audio;
 
 public class SoundManager : MonoBehaviour
 {
-    private static string MASTER_VOLUME_PARAMETER = "MasterVolume";
-    private static string SFX_VOLUME_PARAMETER = "SFXVolume";
-    
-    [SerializeField] private AudioMixerGroup mainMixer;
-    [SerializeField] private AudioMixerGroup sfxMixer;
-    [SerializeField] private AudioMixerGroup musicMixer;
+    private const string MASTER_VOLUME_PARAMETER = "MasterVolume";
+    private const string SFX_VOLUME_PARAMETER = "SFXVolume";
+
+    [SerializeField] private AudioMixer mixer;
+
+    private float lastMasterValue;
+    private float lastSFXValue;
 
     public void MasterVolumeSliderChanged(float newValue)
     {
-        float actualVolumeValue = (1 - newValue) * -40;
-        mainMixer.audioMixer.SetFloat(MASTER_VOLUME_PARAMETER, actualVolumeValue);
+        if (Mathf.Approximately(lastMasterValue, newValue))
+            return;
+
+        lastMasterValue = newValue;
+
+        float actualVolumeValue = (1 - newValue) * -40f;
+        mixer.SetFloat(MASTER_VOLUME_PARAMETER, actualVolumeValue);
     }
     
     public void SFXVolumeSliderChanged(float newValue)
     {
-        float actualVolumeValue = (1 - newValue) * -40;
-        mainMixer.audioMixer.SetFloat(SFX_VOLUME_PARAMETER, actualVolumeValue);
+        if (Mathf.Approximately(lastSFXValue, newValue))
+            return;
+
+        lastSFXValue = newValue;
+
+        float actualVolumeValue = (1 - newValue) * -40f;
+        mixer.SetFloat (SFX_VOLUME_PARAMETER,actualVolumeValue);
     }
 }

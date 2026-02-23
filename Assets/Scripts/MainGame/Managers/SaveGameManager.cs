@@ -41,7 +41,11 @@ public class SaveGameManager : MonoBehaviour
     {
         if (!File.Exists(path))
         {
+
+#if UNITY_EDITOR
             Debug.LogWarning("No save file found!");
+#endif
+
             return;
         }
 
