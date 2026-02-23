@@ -11,7 +11,11 @@ public class FireHazardScriptableObject : ScriptableObject
     public int GetRandomFireDamage()
     {
         int randomDamage = Random.Range(minimumDamage, maximumDamage + 1);
+
+#if UNITY_EDITOR
         Debug.Log("Random damage is " + randomDamage);
+#endif
+
         return randomDamage;
     }
 }

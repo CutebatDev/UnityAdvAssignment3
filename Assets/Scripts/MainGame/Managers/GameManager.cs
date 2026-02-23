@@ -13,13 +13,12 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        foreach (FireHazard fireHazard in fireHazards)
+        int soCount = fireHazardScriptableObjects.Length;
+        for (int i = 0; i < fireHazards.Length; i++)
         {
-            fireHazard.fireHazardData = 
-                fireHazardScriptableObjects[Random.Range(0, fireHazardScriptableObjects.Length)];
-            fireHazard.onCharacterEnteredAction += HandleCharacterEnteredFire;
+            fireHazards[i].fireHazardData = fireHazardScriptableObjects[Random.Range(0, soCount)];
+            fireHazards[i].onCharacterEnteredAction += HandleCharacterEnteredFire;
         }
-      
     }
 
     public void HandleCharacterEnteredFire(FireEnteredEventArgs args)

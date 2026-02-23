@@ -10,37 +10,28 @@ using UnityEngine.Serialization;
 
 public class PlayerCharacterController : MonoBehaviour
 {
+    [SerializeField] private Camera mainCam;
+
     public event UnityAction<int> onTakeDamageEventAction;
-    [SerializeField] private UnityEvent<int> onTakeDamageEvent;
 
     [Header("Navigation")] 
-    private NavMeshAgent navMeshAgent;
+    [SerializeField] private NavMeshAgent navMeshAgent;
 
-    [SerializeField] private Transform waypoint;
     [SerializeField] private Transform[] pathWaypoints;
     
-    private Animator animator;
+    [SerializeField] private Animator animator;
 
-    public int Hp
-    {
-        get => hp;
-        set => hp = value;
-    }
+    private const string speedString = "Speed";
+    private static readonly int speedHash = Animator.StringToHash(speedString);
 
-    public int CurrentWaypointIndex
-    {
-        get => currentWaypointIndex;
-        set => currentWaypointIndex = value;
-    }
+    public int hp = 100;
+    private int startingHp;
+    
+    public int currentWaypointIndex = 0;
 
     private bool isMoving = true;
-    private int currentWaypointIndex = 0;
 
     private bool hasBloodyBoots = true;
-
-
-    private int hp;
-    private int startingHp;
 
     public void ToggleMoving(bool shouldMove)
     {
@@ -62,17 +53,12 @@ public class PlayerCharacterController : MonoBehaviour
     public void TakeDamage(int damageAmount)
     {
         hp -= damageAmount;
-        float hpPercentLeft = (float) hp / startingHp;
-        animator.SetLayerWeight(1, (1 - hpPercentLeft));
-        onTakeDamageEvent.Invoke(hp);
+        animator.SetLayerWeight(1, (1 - ((float)hp / startingHp)));
         onTakeDamageEventAction?.Invoke(hp);
     }
 
     private void Start()
     {
-        hp = 100;
-        animator = GetComponent<Animator>();
-        navMeshAgent = GetComponent<NavMeshAgent>();
         startingHp = hp;
         SetMudAreaCost();
         ToggleMoving(true);
@@ -99,33 +85,29 @@ public class PlayerCharacterController : MonoBehaviour
         if (isMoving && !navMeshAgent.isStopped && navMeshAgent.remainingDistance <= 0.1f)
         {
             currentWaypointIndex++;
+
             if (currentWaypointIndex >= pathWaypoints.Length)
                 currentWaypointIndex = 0;
+
             SetDestination(pathWaypoints[currentWaypointIndex]);
         }
 
         if (animator)
-            animator.SetFloat("Speed", navMeshAgent.velocity.magnitude);
+            animator.SetFloat(speedHash, navMeshAgent.velocity.magnitude);
         
-        if (Camera.main != null)
+        if (mainCam)    
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit, 100f))
             {
                 //We want to know what the mouse is hovering now
+
+#if UNITY_EDITOR
                 Debug.Log($"Hit: {hit.collider.name}");
+#endif
+
             }
         }
 
-    }
-    
-    private void OnEnable()
-    {
-        
-    }
-
-    private void OnDisable()
-    {
-        
     }
 }
