@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class ArrowObject : MonoBehaviour
 {
+    [SerializeField] private float lifetime = 2f;
+
     public float speed;
     public float damage;
 
@@ -16,5 +18,20 @@ public class ArrowObject : MonoBehaviour
     void Update()
     {
         tr.position += tr.forward * speed * Time.deltaTime;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Invoke(nameof(ReturnToPool), lifetime);
+    }
+
+    private void ReturnToPool()
+    {
+        ObjectPoolManager.Instance.ReturnObject(gameObject);
+    }
+
+    private void OnDisable()
+    {
+        CancelInvoke();
     }
 }

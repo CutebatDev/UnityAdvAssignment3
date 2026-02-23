@@ -20,7 +20,12 @@ public class ArrowHazard : MonoBehaviour
         if (shootIntervalLeft <= 0)
         {
             Quaternion rotation = Quaternion.Euler(0f, 180f, 0f);
-            Instantiate(arrowPrefab, transform.position, rotation);
+
+            GameObject arrowGO = ObjectPoolManager.Instance.GetObject(arrowPrefab);
+
+            arrowGO.transform.position = transform.position;
+            arrowGO.transform.rotation = rotation;
+
             shootIntervalLeft = shootInterval;
         }
     }
