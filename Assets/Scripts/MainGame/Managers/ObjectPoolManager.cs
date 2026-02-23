@@ -12,7 +12,9 @@ public class ObjectPoolManager : MonoBehaviour
     public GameObject[] prefabReferences;
     [SerializeField] private int defaultPoolSize;
 
-    private Dictionary<GameObject, Queue<GameObject>> _pooledInstances; // reference key, list of instances
+    private Dictionary<GameObject, Queue<GameObject>> _pooledInstances;
+    private Dictionary<GameObject, GameObject> _instanceToReference; // instance -> prefab
+
 
     private void Awake()
     {
@@ -32,43 +34,46 @@ public class ObjectPoolManager : MonoBehaviour
     private void InstantiatePools()
     {
         _pooledInstances = new Dictionary<GameObject, Queue<GameObject>>();
+        _instanceToReference = new Dictionary<GameObject, GameObject>();
         foreach (GameObject reference in prefabReferences)
-        {
-            _pooledInstances[reference] = new Queue<GameObject>();
             CreatePool(reference);
-        }
     }
 
     public void CreatePool(GameObject reference)
     {
         if (_pooledInstances.ContainsKey(reference))
             return;
+        _pooledInstances[reference] = new Queue<GameObject>();
         for (int i = 0; i < defaultPoolSize; i++)
         {
-            _pooledInstances[reference].Enqueue(Instantiate(reference));
-            Debug.Log("Created Pool !!! (:");
-            _pooledInstances[reference].Peek().SetActive(false);
+            GameObject obj = Instantiate(reference);
+            obj.SetActive(false);
+            _instanceToReference[obj] = reference;
+            _pooledInstances[reference].Enqueue(obj);
         }
     }
 
     public GameObject GetObject(GameObject reference)
     {
-        if (_pooledInstances.ContainsKey(reference))
+        if (!_pooledInstances.ContainsKey(reference))
             CreatePool(reference);
-        GameObject returnObj;
-        if(_pooledInstances[reference].Count > 0)
-            returnObj = _pooledInstances[reference].Dequeue();
-        else
-            returnObj = Instantiate(reference);
+        GameObject returnObj = _pooledInstances[reference].Count > 0
+            ? _pooledInstances[reference].Dequeue()
+            : Instantiate(reference);
+        _instanceToReference[returnObj] = reference;
         returnObj.SetActive(true);
         return returnObj;
     }
 
-    public void ReturnObject(GameObject reference)
+    public void ReturnObject(GameObject instance)
     {
-        if (_pooledInstances.ContainsKey(reference))
-            CreatePool(reference);
-        reference.SetActive(false);
-        _pooledInstances[reference].Enqueue(reference);
+        if (!_instanceToReference.ContainsKey(instance))
+        {
+            Debug.LogWarning("Returned object not tracked: " + instance.name);
+            return;
+        }
+        GameObject reference = _instanceToReference[instance];
+        instance.SetActive(false);
+        _pooledInstances[reference].Enqueue(instance);
     }
 }

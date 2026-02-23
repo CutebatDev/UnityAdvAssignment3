@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class ArrowObject : MonoBehaviour
@@ -12,6 +13,10 @@ public class ArrowObject : MonoBehaviour
     void Awake()
     {
         tr = transform;
+    }
+
+    private void OnEnable()
+    {
         Invoke(nameof(ReturnToPool), lifetime);
     }
 
@@ -19,6 +24,7 @@ public class ArrowObject : MonoBehaviour
     void Update()
     {
         tr.position += tr.forward * speed * Time.deltaTime;
+        
     }
     
 
