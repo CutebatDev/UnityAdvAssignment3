@@ -46,6 +46,7 @@ public class ObjectPoolManager : MonoBehaviour
         for (int i = 0; i < defaultPoolSize; i++)
         {
             _pooledInstances[reference].Enqueue(Instantiate(reference));
+            Debug.Log("Created Pool !!! (:");
             _pooledInstances[reference].Peek().SetActive(false);
         }
     }

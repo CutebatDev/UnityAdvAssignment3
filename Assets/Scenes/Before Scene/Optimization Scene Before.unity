@@ -1254,6 +1254,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2946589972397768415, guid: a6883c51f22a91441945fbd6682f0a5f,
         type: 3}
+      propertyPath: mainCam
+      value: 
+      objectReference: {fileID: 330585545}
+    - target: {fileID: 2946589972397768415, guid: a6883c51f22a91441945fbd6682f0a5f,
+        type: 3}
       propertyPath: waypoint
       value: 
       objectReference: {fileID: 1052503020}
@@ -6531,6 +6536,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 794181239830873258, guid: 917d8b68eb2c4c941a7303611e8c74c4,
+        type: 3}
+      propertyPath: playerScrRef
+      value: 
+      objectReference: {fileID: 64808986}
     - target: {fileID: 794181239830873258, guid: 917d8b68eb2c4c941a7303611e8c74c4,
         type: 3}
       propertyPath: fireHazardData
@@ -18306,7 +18316,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '###'
+  m_text: 'HP : 10
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -20795,6 +20807,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 794181239830873258, guid: 917d8b68eb2c4c941a7303611e8c74c4,
+        type: 3}
+      propertyPath: playerScrRef
+      value: 
+      objectReference: {fileID: 64808986}
     - target: {fileID: 794181239830873258, guid: 917d8b68eb2c4c941a7303611e8c74c4,
         type: 3}
       propertyPath: fireHazardData
@@ -24033,6 +24050,7 @@ GameObject:
   - component: {fileID: 2136455733}
   - component: {fileID: 2136455735}
   - component: {fileID: 2136455736}
+  - component: {fileID: 2136455737}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -24067,9 +24085,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 742dd9dcfd65c0a41816ae8e4915afa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hpText: {fileID: 0}
-  bobby: {fileID: 64808986}
-  skillsHolder: {fileID: 2041494234}
+  hpText: {fileID: 1517754744}
+  goofyGoober: {fileID: 64808986}
 --- !u!114 &2136455733
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24115,7 +24132,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4f823439c7663949a3dfe06acd74e76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiManager: {fileID: 0}
+--- !u!114 &2136455737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2136455730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51b05377dc514938a80681090b4bd200, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectPoolManager
+  prefabReferences:
+  - {fileID: 2227274138544148052, guid: 9f4fb076d83c52e48a06dfcbbf830b01, type: 3}
+  defaultPoolSize: 10
 --- !u!1001 &1701056887595181982
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24184,6 +24215,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 794181239830873258, guid: 917d8b68eb2c4c941a7303611e8c74c4,
+        type: 3}
+      propertyPath: playerScrRef
+      value: 
+      objectReference: {fileID: 64808986}
     - target: {fileID: 794181239830873258, guid: 917d8b68eb2c4c941a7303611e8c74c4,
         type: 3}
       propertyPath: fireHazardData

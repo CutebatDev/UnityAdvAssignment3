@@ -94,20 +94,6 @@ public class PlayerCharacterController : MonoBehaviour
 
         if (animator)
             animator.SetFloat(speedHash, navMeshAgent.velocity.magnitude);
-        
-        if (mainCam)    
-        {
-            Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, 100f))
-            {
-                //We want to know what the mouse is hovering now
-
-#if UNITY_EDITOR
-                Debug.Log($"Hit: {hit.collider.name}");
-#endif
-
-            }
-        }
 
     }
 }

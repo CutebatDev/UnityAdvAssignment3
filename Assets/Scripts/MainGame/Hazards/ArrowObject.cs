@@ -12,6 +12,7 @@ public class ArrowObject : MonoBehaviour
     void Awake()
     {
         tr = transform;
+        Invoke(nameof(ReturnToPool), lifetime);
     }
 
     // Update is called once per frame
@@ -19,11 +20,7 @@ public class ArrowObject : MonoBehaviour
     {
         tr.position += tr.forward * speed * Time.deltaTime;
     }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        Invoke(nameof(ReturnToPool), lifetime);
-    }
+    
 
     private void ReturnToPool()
     {

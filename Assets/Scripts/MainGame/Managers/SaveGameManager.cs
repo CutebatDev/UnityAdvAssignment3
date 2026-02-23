@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -8,10 +9,17 @@ using UnityEngine;
 public class SaveGameManager : MonoBehaviour
 {
     private const string SAVE_FILE_NAME = "/Save.dat";
-    private string path = Application.persistentDataPath + SAVE_FILE_NAME;
+    private string path;
 
     [SerializeField] private GameManager gameManager;
     [SerializeField] private UIManager uiManager;
+
+
+    private void Awake()
+    {
+        path = Application.persistentDataPath + SAVE_FILE_NAME;
+    }
+
 
     [ContextMenu("Save!")]
     public void SaveGame()
